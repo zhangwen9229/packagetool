@@ -1,0 +1,17 @@
+{
+  "bid/detail/index": {
+    "js": "/dist/bid/detail/index.400cfd96.js"
+  },
+  "bid/list/index": {
+    "js": "/dist/bid/list/index.400cfd96.js"
+  },
+  "home/index": {
+    "js": "/dist/home/index.400cfd96.js"
+  },
+  "user/changepwd/index": {
+    "js": "/dist/user/changepwd/index.400cfd96.js"
+  },
+  "user/info/index": {
+    "js": "/dist/user/info/index.400cfd96.js"
+  }
+}

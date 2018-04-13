@@ -1,0 +1,13 @@
+{
+  "presets": [
+    ["env", {
+      "modules": false,
+      "targets": {
+        "browsers": ["> 1%"]
+      },
+      "plugins": ["transform-es3-property-literals"]
+    }],
+    "stage-2"
+  ],
+  "plugins": [ "transform-runtime"]
+}
