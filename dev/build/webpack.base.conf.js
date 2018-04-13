@@ -10,7 +10,7 @@ const tools = require('./tools')
 function resolve(dir) {
     return path.join(__dirname, '..', dir)
 }
-console.log(process.env.NODE_ENV)
+// console.log(process.env.NODE_ENV)
 module.exports = {
     context: path.resolve(__dirname, '../'),
     entry: tools.getEntrys(),
@@ -38,10 +38,6 @@ module.exports = {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')],
-                options: {
-                    plugins: ['transform-runtime','transform-es3-property-literals'],
-                    presets: ['es2015-loose']
-                }
             },
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
