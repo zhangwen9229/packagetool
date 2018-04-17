@@ -1,8 +1,8 @@
-import ('./index.css')
+require('./index.scss')
 
 // import * from './busi'
 require.ensure([], function(){
     require('./busi').aa();
 });
 
-console.log('list/index.js');
+console.log(' list/index.js');

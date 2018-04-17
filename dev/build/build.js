@@ -23,6 +23,7 @@ spinner.start()
 
 rm(config.build.assetsRoot, err => {
   if (err) throw err
+  
   webpack(webpackConfig, (err, stats) => {
     spinner.stop()
     if (err) throw err
