@@ -9,8 +9,10 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-    // const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-    // const portfinder = require('portfinder')
+const tools = require('./tools')
+
+// const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+// const portfinder = require('portfinder')
 
 // const HOST = process.env.HOST
 // const PORT = process.env.PORT && Number(process.env.PORT)
@@ -39,12 +41,12 @@ const devWebpackConfig = merge(baseWebpackConfig, {
             allChunks: true,
         }),
         // https://github.com/ampedandwired/html-webpack-plugin
-        new HtmlWebpackPlugin({
-            filename: path.resolve(__dirname, '../dist/view/bid/list/index.html'),
-            template: path.resolve(__dirname, '../src/view/bid/list/index.html'),
-            chunks: ['bid/list/index'],
-            inject: true
-        }),
+        // new HtmlWebpackPlugin({
+        //     filename: path.resolve(__dirname, '../dist/view/bid/list/index.html'),
+        //     template: path.resolve(__dirname, '../src/view/bid/list/index.html'),
+        //     chunks: ['bid/list/index'],
+        //     inject: true
+        // }),
         // copy custom static assets
         new CopyWebpackPlugin([{
             from: path.resolve(__dirname, '../src/static'),
@@ -56,13 +58,13 @@ const devWebpackConfig = merge(baseWebpackConfig, {
             // ./public directory is being served
             host: 'localhost',
             port: 8081,
-            // server: { baseDir: [path.resolve(__dirname, '../')] },
-            proxy: 'http://localhost:8080/',
+            server: { baseDir: [path.resolve(__dirname, '../dist/')] },
+            // proxy: 'http://localhost:8080/',
             open: true
         }, {
             reload: false
         })
-    ]
+    ].concat(tools.htmlPlugins)
 })
 
 module.exports = devWebpackConfig;
