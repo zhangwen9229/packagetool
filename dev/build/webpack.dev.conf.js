@@ -28,8 +28,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         new webpack.DefinePlugin({
             'process.env': require('../config/dev.env')
         }),
-        // new webpack.HotModuleReplacementPlugin(),
-        new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
+        // new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
         new webpack.NoEmitOnErrorsPlugin(),
         new ExtractTextPlugin({
             // filename: utils.assetsPath('style/[name].[hash:8].css'),
@@ -40,27 +39,18 @@ const devWebpackConfig = merge(baseWebpackConfig, {
             // increasing file size: https://github.com/vuejs-templates/webpack/issues/1110
             allChunks: true,
         }),
-        // https://github.com/ampedandwired/html-webpack-plugin
-        // new HtmlWebpackPlugin({
-        //     filename: path.resolve(__dirname, '../dist/view/bid/list/index.html'),
-        //     template: path.resolve(__dirname, '../src/view/bid/list/index.html'),
-        //     chunks: ['bid/list/index'],
-        //     inject: true
-        // }),
         // copy custom static assets
         new CopyWebpackPlugin([{
-            from: path.resolve(__dirname, '../src/static'),
-            to: config.dev.assetsSubDirectory + '/static/',
+            from: path.resolve(__dirname, path.join(config.common.src, config.common.static)),
+            to: config.common.static,
             ignore: ['.*']
         }]),
         new BrowserSyncPlugin({
-            // browse to http://localhost:3000/ during development,
-            // ./public directory is being served
             host: 'localhost',
-            port: 8081,
-            server: { baseDir: [path.resolve(__dirname, '../dist/')] },
-            // proxy: 'http://localhost:8080/',
-            open: true
+            port: config.dev.port,
+            server: !!config.dev.proxyUrl ? null : { baseDir: [config.common.assetsRoot] },
+            proxy: config.dev.proxyUrl || null,
+            open: config.dev.autoOpenBrowser
         }, {
             reload: false
         })
@@ -68,28 +58,3 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 })
 
 module.exports = devWebpackConfig;
-
-// module.exports = new Promise((resolve, reject) => {
-//     portfinder.basePort = process.env.PORT || config.dev.port
-//     portfinder.getPort((err, port) => {
-//         if (err) {
-//             reject(err)
-//         } else {
-//             // publish the new Port, necessary for e2e tests
-//             process.env.PORT = port
-//                 // add port to devServer config
-//             devWebpackConfig.devServer.port = port
-
-//             // Add FriendlyErrorsPlugin
-//             devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
-//                 compilationSuccessInfo: {
-//                     messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
-//                 },
-//                 onErrors: config.dev.notifyOnErrors ?
-//                     utils.createNotifierCallback() : undefined
-//             }))
-
-//             resolve(devWebpackConfig)
-//         }
-//     })
-// })

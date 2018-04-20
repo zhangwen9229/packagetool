@@ -9,19 +9,14 @@ const path = require('path')
 const chalk = require('chalk')
 const webpack = require('webpack')
 const config = require('../config')
+const tools = require('./tools')
 const webpackConfig = require('./webpack.dev.conf')
 
 const spinner = ora('building for production...')
 spinner.start()
-// console.log(path.join(config.build.assetsRoot, config.build.assetsSubDirectory))
 
-// console.log('')
-// console.log(config.build.assetsPublicPath)
-// console.log(config.dev.assetsPublicPath)
 
-// return;
-
-rm(config.build.assetsRoot, err => {
+tools.removeOldFiles(err => {
   if (err) throw err
   
   webpack(webpackConfig, (err, stats) => {

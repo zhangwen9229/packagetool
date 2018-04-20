@@ -1,27 +1,25 @@
 'use strict'
-const path = require('path')
-const utils = require('./utils')
-const config = require('../config')
-const vueLoaderConfig = require('./vue-loader.conf')
-const AssetsPlugin = require('assets-webpack-plugin')
-const ManifestPlugin = require('webpack-manifest-plugin')
-const tools = require('./tools')
+const path = require('path'),
+    utils = require('./utils'),
+    config = require('../config'),
+    vueLoaderConfig = require('./vue-loader.conf'),
+    tools = require('./tools');
 
 function resolve(dir) {
     return path.join(__dirname, '..', dir)
 }
-// console.log(process.env.NODE_ENV)
+
 module.exports = {
     context: path.resolve(__dirname, '../'),
     entry: tools.getEntrys(),
     output: {
-        path: config.build.assetsRoot,
+        path: config.common.assetsRoot,
         // filename: '[name].[hash:8].js',
         // chunkFilename: "bundle/[name].[chunkhash:8].js",
-        filename: '[name].js',
-        chunkFilename: "bundle/[name].js",
-        publicPath: process.env.NODE_ENV === 'production' ?
-            config.build.assetsPublicPath : config.dev.assetsPublicPath
+        filename: 'js/[name].js',
+        chunkFilename: "js/bundle/[name].js",
+        publicPath: config.common.assetsPublicPath
+            // process.env.NODE_ENV === 'production' ? config.build.assetsPublicPath : config.dev.assetsPublicPath
     },
     resolve: {
         extensions: ['.js', '.vue', '.json'],
@@ -68,23 +66,11 @@ module.exports = {
             {
                 test: /\.(html)$/,
                 use: {
-                    loader: 'html-loader',
-                    // options: {
-                    //     attrs: [':src']
-                    // }
+                    loader: 'html-loader'
                 }
             }
         ]
     },
-    plugins: [
-
-        // new AssetsPlugin({
-        //     filename: 'map.json',
-        //     prettyPrint: true,
-        //     includeManifest: false
-        // })
-        new ManifestPlugin()
-    ],
     node: {
         // prevent webpack from injecting useless setImmediate polyfill because Vue
         // source contains it (although only uses it if it's native).

@@ -1,35 +1,30 @@
 'use strict'
-require('./check-versions')()
+require('./check-versions')();
 
-process.env.NODE_ENV = 'production'
-
-const rm = require('rimraf')
-const path = require('path')
-const chalk = require('chalk')
-const webpack = require('webpack')
-const config = require('../config')
-const webpackConfig = require('./webpack.dev.conf')
-const bs = require('browser-sync').get('bs-webpack-plugin')
+const path = require('path'),
+    chalk = require('chalk'),
+    webpack = require('webpack'),
+    config = require('../config'),
+    webpackConfig = require('./webpack.dev.conf'),
+    tools = require('./tools'),
+    bs = require('browser-sync').get('bs-webpack-plugin');
 let lastStatsJson;
 
-rm(config.build.assetsRoot, err => {
+tools.removeOldFiles(err => {
     if (err) throw err
     const compiler = webpack(webpackConfig);
     let changedFiles = [];
-
     //通过watch-run检查修改文件
     compiler.plugin("watch-run", (watching, done) => {
         const changedTimes = watching.watchFileSystem.watcher.mtimes;
         changedFiles = Object.keys(changedTimes)
-            .map(file => `\n  ${file}`);
-        // .join("");
+            .map(file => `${file}`);
         done();
     });
 
-    compiler.watch({ // watch options:
+    compiler.watch({
         aggregateTimeout: 300, // wait so long for more changes
         poll: true // use polling instead of native watchers
-            // pass a number to set the polling interval
     }, function(err, stats) {
         if (err) throw err
         const jsonStats = stats.toJson();
@@ -52,13 +47,16 @@ rm(config.build.assetsRoot, err => {
             console.log(chalk.red(jsonStats.warnings))
         }
         if (changedFiles.length) {
-            console.log("New build triggered, files changed:", changedFiles);
+            console.log(chalk.green("New build triggered"));
+            console.log(chalk.green("  files changed:"), chalk.yellow(changedFiles))
             let isHasJsOrHtmlChanged = false;
             const arrCssBasename = [],
                 arrMatchs = [];
             changedFiles.forEach((value, index) => {
+                //判断修改文件中是否有非css类型文件
                 const matchs = value.match(/(?!(\.css|\.scss|\.sass|\.less))(\..*)$/g)
                 if (matchs && matchs.length > 0) {
+                    //有非css文件被修改
                     arrMatchs.push(matchs[0])
                     isHasJsOrHtmlChanged = true;
                     return false;
@@ -66,7 +64,7 @@ rm(config.build.assetsRoot, err => {
                     arrCssBasename.push(path.basename(value).replace(path.extname(value), '.css'));
                 }
             });
-            console.log(arrMatchs)
+
             if (isHasJsOrHtmlChanged) {
                 (!JugeChunkChanged(jsonStats, lastStatsJson) || arrMatchs.indexOf('.html') > -1) && bs.reload();
             } else {
@@ -83,7 +81,7 @@ rm(config.build.assetsRoot, err => {
 })
 
 /**
- * 
+ * 判断入口js文件是否有修改，避免js未改动的保存导致浏览器刷新
  * @param {object} jsonStats 
  * @param {object} lastStatsJson 
  */
