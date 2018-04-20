@@ -3,7 +3,6 @@ require('./check-versions')()
 
 process.env.NODE_ENV = 'production'
 
-const ora = require('ora')
 const rm = require('rimraf')
 const path = require('path')
 const chalk = require('chalk')
@@ -12,9 +11,6 @@ const config = require('../config')
 const webpackConfig = require('./webpack.dev.conf')
 const bs = require('browser-sync').get('bs-webpack-plugin')
 let lastStatsJson;
-
-// const spinner = ora('building for production...')
-// spinner.start()
 
 rm(config.build.assetsRoot, err => {
     if (err) throw err
@@ -58,19 +54,21 @@ rm(config.build.assetsRoot, err => {
         if (changedFiles.length) {
             console.log("New build triggered, files changed:", changedFiles);
             let isHasJsOrHtmlChanged = false;
-            const arrCssBasename = [];
+            const arrCssBasename = [],
+                arrMatchs = [];
             changedFiles.forEach((value, index) => {
                 const matchs = value.match(/(?!(\.css|\.scss|\.sass|\.less))(\..*)$/g)
                 if (matchs && matchs.length > 0) {
+                    arrMatchs.push(matchs[0])
                     isHasJsOrHtmlChanged = true;
                     return false;
                 } else {
                     arrCssBasename.push(path.basename(value).replace(path.extname(value), '.css'));
                 }
             });
-
+            console.log(arrMatchs)
             if (isHasJsOrHtmlChanged) {
-                !JugeChunkChanged(jsonStats, lastStatsJson) && bs.reload();
+                (!JugeChunkChanged(jsonStats, lastStatsJson) || arrMatchs.indexOf('.html') > -1) && bs.reload();
             } else {
                 bs.notify("reload css")
                 bs.reload(arrCssBasename);

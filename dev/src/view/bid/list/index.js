@@ -9,4 +9,4 @@ require('./index.scss')
 
 console.log(busi.a)
 
-console.log(' list/index.js')
+console.log('这是 list/index.js')
