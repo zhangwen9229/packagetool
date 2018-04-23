@@ -25,7 +25,7 @@ const getEntrys = () => {
             return;
         }
 
-        matchs = itemPath.match(/(.+)\.html$/);
+        matchs = itemPath.match(/(.+)\.(html|php|jsp|tpl)$/);
         if (matchs) {
             generateHtmlWebpackPlugin(srcViewPath, itemPath);
         }
