@@ -4,10 +4,8 @@
     "description": "gulp webpack packagetool",
     "main": "index.js",
     "scripts": {
-        "test": "node build/build.js",
-        "dev": "npx webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-        "build": "npx webpack --mode production",
-        "tb": "node build/build.js",
+        "dev": "node build/dev.js",
+        "build": "node build/build.js",
         "wb": "npx webpack --config build/webpack.dev.conf.js --watch --json > stats.json"
     },
     "keywords": [
