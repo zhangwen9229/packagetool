@@ -6,9 +6,9 @@ module.exports = {
         // Paths
         src: '../src',
         view: 'view', //视图目录名
-        dist_view: '../pkg/', //若不是用后端代理，该目录路径需保持与assetsRoot相同
+        dist_view: '../dist/', //若不是用后端代理，该目录路径需保持与assetsRoot相同
         static: 'static', //静态文件，直接拷贝，不打包
-        assetsRoot: path.resolve(__dirname, '../pkg'),
+        assetsRoot: path.resolve(__dirname, '../dist'),
         assetsSubDirectory: '' //assets
     },
     dev: {
