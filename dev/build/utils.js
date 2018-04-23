@@ -15,17 +15,11 @@ exports.cssLoaders = function(options) {
     options = options || {}
 
     const cssLoader = {
-            loader: 'css-loader',
-            options: {
-                sourceMap: options.sourceMap
-            }
+        loader: 'css-loader',
+        options: {
+            sourceMap: options.sourceMap
         }
-        // const styleLoader = {
-        //     loader: 'style-loader',
-        //     options: {
-        //         sourceMap: options.sourceMap
-        //     }
-        // }
+    }
 
     const postcssLoader = {
         loader: 'postcss-loader',

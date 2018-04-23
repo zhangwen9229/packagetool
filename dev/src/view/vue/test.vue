@@ -6,6 +6,7 @@
   </div>
 </template>
 <script>
+require('./test.scss')
 export default {
   name: "test",
   data() {
@@ -18,3 +19,7 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+
+</style>
+
