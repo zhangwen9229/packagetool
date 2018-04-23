@@ -53,8 +53,9 @@ const devWebpackConfig = merge(baseWebpackConfig, {
             open: config.dev.autoOpenBrowser
         }, {
             reload: false
-        })
-    ].concat(tools.htmlPlugins)
+        }),
+        ...tools.htmlPlugins
+    ]
 })
 
 module.exports = devWebpackConfig;
