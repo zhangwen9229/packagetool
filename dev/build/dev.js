@@ -1,6 +1,6 @@
 'use strict'
 require('./check-versions')();
-
+process.env.NODE_ENV = 'development'
 const path = require('path'),
     chalk = require('chalk'),
     webpack = require('webpack'),

@@ -12,5 +12,6 @@
         ["transform-es2015-modules-commonjs-simple", {
             "noMangle": true
         }], "transform-vue-jsx", "transform-runtime"
-    ]
+    ],
+    "sourceMaps": true
 }

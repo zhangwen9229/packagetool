@@ -6,7 +6,7 @@
   </div>
 </template>
 <script>
-require('./test.scss')
+require("./test.scss");
 export default {
   name: "test",
   data() {
@@ -16,7 +16,11 @@ export default {
         age: "12"
       }
     };
-  }
+  },
+  mounted() {
+    console.log("子组件已挂载");
+  },
+  methods: {}
 };
 </script>
 <style lang="scss" scoped>

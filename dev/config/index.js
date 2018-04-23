@@ -6,17 +6,17 @@ module.exports = {
         // Paths
         src: '../src',
         view: 'view', //视图目录名
-        dist_view: '../dist/', //若不是用后端代理，该目录路径需保持与assetsRoot相同
+        dist_view: '../pkg/', //若不是用后端代理，该目录路径需保持与assetsRoot相同
         static: 'static', //静态文件，直接拷贝，不打包
-        assetsRoot: path.resolve(__dirname, '../dist'),
-        assetsPublicPath: '/',
-        assetsSubDirectory: 'assets'
+        assetsRoot: path.resolve(__dirname, '../pkg'),
+        assetsSubDirectory: '' //assets
     },
     dev: {
         host: 'localhost',
         port: 8081,
         proxyUrl: '', //http://localhost:8080/
         autoOpenBrowser: false,
+        assetsPublicPath: '/',
         // https://webpack.js.org/configuration/devtool/#development
         devtool: 'cheap-module-eval-source-map', //'source-map',
         // If you have problems debugging vue-files in devtools,
@@ -31,7 +31,7 @@ module.exports = {
         productionSourceMap: true,
         // https://webpack.js.org/configuration/devtool/#production
         devtool: '#source-map',
-
+        assetsPublicPath: '/',//cdn: //qb.com
         // Gzip off by default as many popular static hosts such as
         // Surge or Netlify already gzip all static assets for you.
         // Before setting to `true`, make sure to:

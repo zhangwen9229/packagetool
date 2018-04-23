@@ -81,8 +81,19 @@ const generateHtmlWebpackPlugin = (srcViewPath, itemPath) => {
             inject: false
         }
     if (itemPath.match(/(.+)index\.html$/)) {
-        htmlPluginOption.chunks = [getChunk(srcViewPath, matchs)];
+        htmlPluginOption.chunks = [getChunk(srcViewPath, matchs),'vendor'];
         htmlPluginOption.inject = true;
+    }
+    if (process.env.NODE_ENV === 'production') {
+        htmlPluginOption.minify = {
+            removeComments: true,
+            collapseWhitespace: true,
+            removeAttributeQuotes: true,
+            // more options:
+            // https://github.com/kangax/html-minifier#options-quick-reference
+        };
+        // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+        htmlPluginOption.chunksSortMode = 'dependency';
     }
 
     const htmlPlugin = new HtmlWebpackPlugin(htmlPluginOption)

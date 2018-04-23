@@ -5,7 +5,6 @@ const config = require('../config')
 const merge = require('webpack-merge')
 const path = require('path')
 const baseWebpackConfig = require('./webpack.base.conf')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
@@ -39,12 +38,6 @@ const devWebpackConfig = merge(baseWebpackConfig, {
             // increasing file size: https://github.com/vuejs-templates/webpack/issues/1110
             allChunks: true,
         }),
-        // copy custom static assets
-        new CopyWebpackPlugin([{
-            from: path.resolve(__dirname, path.join(config.common.src, config.common.static)),
-            to: config.common.static,
-            ignore: ['.*']
-        }]),
         new BrowserSyncPlugin({
             host: 'localhost',
             port: config.dev.port,

@@ -3,6 +3,7 @@ const path = require('path'),
     utils = require('./utils'),
     config = require('../config'),
     vueLoaderConfig = require('./vue-loader.conf'),
+    CopyWebpackPlugin = require('copy-webpack-plugin'),
     tools = require('./tools');
 
 function resolve(dir) {
@@ -14,12 +15,9 @@ module.exports = {
     entry: tools.getEntrys(),
     output: {
         path: config.common.assetsRoot,
-        // filename: '[name].[hash:8].js',
-        // chunkFilename: "bundle/[name].[chunkhash:8].js",
         filename: 'js/[name].js',
         chunkFilename: "js/bundle/[name].js",
-        publicPath: config.common.assetsPublicPath
-            // process.env.NODE_ENV === 'production' ? config.build.assetsPublicPath : config.dev.assetsPublicPath
+        publicPath: process.env.NODE_ENV === 'production' ? config.build.assetsPublicPath : config.dev.assetsPublicPath
     },
     resolve: {
         extensions: ['.js', '.vue', '.json'],
@@ -72,6 +70,14 @@ module.exports = {
             }
         ]
     },
+    plugins: [
+        // copy custom static assets
+        new CopyWebpackPlugin([{
+            from: path.resolve(__dirname, path.join(config.common.src, config.common.static)),
+            to: config.common.static,
+            ignore: ['.*']
+        }]),
+    ],
     node: {
         // prevent webpack from injecting useless setImmediate polyfill because Vue
         // source contains it (although only uses it if it's native).

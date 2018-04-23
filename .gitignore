@@ -1,6 +1,7 @@
 .DS_Store
 node_modules/
 /dev/dist/
+/dev/pkg/
 ./view
 npm-debug.log*
 yarn-debug.log*

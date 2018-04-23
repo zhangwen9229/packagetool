@@ -1,0 +1,1 @@
+console.log("这是一个lib测试文件")

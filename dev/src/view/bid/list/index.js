@@ -11,7 +11,7 @@ require.ensure([], function(){
 
 // console.log(busi.a)
 
-console.log('这是 list/index.js')
+console.log('这是 list/index.js 9999')
 
 new Vue({
     el: '#wrapper',
