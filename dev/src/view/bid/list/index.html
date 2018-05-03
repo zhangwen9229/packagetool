@@ -5,18 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {include file="_common/var.html"}
     <title>Document</title>
+    {{{__HEAD_JAVASCRIPT__}}}
 </head>
 
 <body>
     <div>
-        {include file="_common/var.htm"} bid/list 页
+       bid/list 页1
     </div>
-
+    {include file="_common/child.html"}
     <div id="wrapper">
+        {literal}
         {{data}}
         <test></test>
+        {/literal}
     </div>
+    <p>
+        <img class="btimg" src="/static/img/activity_02.png" alt="">
+    </p>
+   
 
 </body>
 

@@ -9,7 +9,10 @@ module.exports = {
         dist_view: '../dist/', //若不是用后端代理，该目录路径需保持与assetsRoot相同
         static: 'static', //静态文件，直接拷贝，不打包
         assetsRoot: path.resolve(__dirname, '../dist'),
-        assetsSubDirectory: '' //assets
+        assetsSubDirectory: 'assets', //assets
+        headerChunks: [
+            path.resolve(__dirname, '../src/assets/js/lib/ydui/ydui.flexible.js')
+        ]
     },
     dev: {
         host: 'localhost',
@@ -31,7 +34,7 @@ module.exports = {
         productionSourceMap: true,
         // https://webpack.js.org/configuration/devtool/#production
         devtool: '#source-map',
-        assetsPublicPath: '/',//cdn: //qb.com
+        assetsPublicPath: '/', //cdn: //qb.com
         // Gzip off by default as many popular static hosts such as
         // Surge or Netlify already gzip all static assets for you.
         // Before setting to `true`, make sure to:

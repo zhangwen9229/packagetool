@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>这是一个子组件</p>
+    <p>这是一个子组件1</p>
     <p>{{childData.name}}</p>
     <p>{{childData.age}}</p>
   </div>
@@ -24,6 +24,8 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-
+p{
+  // color: #000;
+}
 </style>
 

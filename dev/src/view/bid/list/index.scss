@@ -1,5 +1,15 @@
+@import '../../../assets/css/utils.scss';
+
 body {
     font-size: 28px;
-    background:  #c0c;
+    background:  #c00;
     // display: flex;//url('../../../image/activity_01.png') center no-repeat
+}
+.btimg{
+    margin-top: 300px;
+}
+
+[data-dpr="1"] .qbheader {
+    @include onePxBottomByBg();
+    color: red;
 }

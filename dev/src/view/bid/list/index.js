@@ -2,7 +2,7 @@ require('./index.scss')
 
 import Vue from 'vue'
 // import { default as busi } from './busi.js'
-import Test from '@/view/vue/test'
+import Test from '@/widget/test'
 
 require.ensure([], function(){
     const busi  = require('./busi');

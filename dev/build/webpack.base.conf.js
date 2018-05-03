@@ -15,8 +15,8 @@ module.exports = {
     entry: tools.getEntrys(),
     output: {
         path: config.common.assetsRoot,
-        filename: 'js/[name].js',
-        chunkFilename: "js/bundle/[name].js",
+        filename: 'assets/js/[name].js',
+        chunkFilename: "assets/js/bundle/[name].js",
         publicPath: process.env.NODE_ENV === 'production' ? config.build.assetsPublicPath : config.dev.assetsPublicPath
     },
     resolve: {

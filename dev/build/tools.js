@@ -7,7 +7,8 @@ const rm = require('rimraf'),
     async = require("async"),
     HtmlWebpackPlugin = require('html-webpack-plugin'),
     view_path = path.join(config.common.src, config.common.view),
-    dist_view_path = path.join(config.common.dist_view, config.common.view);
+    dist_view_path = path.join(config.common.dist_view, config.common.view),
+    HeadJavascriptInjectPlugin = require('./headJavascriptInjectPlugin');
 
 let matchs = [],
     files = {},
@@ -17,19 +18,20 @@ module.exports.htmlPlugins = arrhtmlPlugins;
 
 const getEntrys = () => {
     const jsPath = path.resolve(__dirname, view_path);
+    const srcViewPath = path.resolve(__dirname, view_path);
     loopReadDir(jsPath, (itemPath) => {
-        const srcViewPath = path.resolve(__dirname, view_path);
-        matchs = itemPath.match(/(.+)index\.js$/)
-        if (matchs) {
-            files[getChunk(srcViewPath, matchs, true)] = itemPath;
-            return;
-        }
+            matchs = itemPath.match(/(.+)index\.js$/)
+            if (matchs) {
+                files[getChunk(srcViewPath, matchs, true)] = itemPath;
+                return;
+            }
 
-        matchs = itemPath.match(/(.+)\.(html|php|jsp|tpl)$/);
-        if (matchs) {
-            generateHtmlWebpackPlugin(srcViewPath, itemPath);
-        }
-    })
+            matchs = itemPath.match(/(.+)\.(html|php|jsp|tpl)$/);
+            if (matchs) {
+                generateHtmlWebpackPlugin(srcViewPath, itemPath);
+            }
+        })
+
     return files
 }
 
@@ -78,10 +80,11 @@ const generateHtmlWebpackPlugin = (srcViewPath, itemPath) => {
         htmlPluginOption = {
             filename: absoluteHtmlPath,
             template: itemPath,
-            inject: false
+            inject: false,
+            // favicon: 'src/images/favicon.png'
         }
     if (itemPath.match(/(.+)index\.html$/)) {
-        htmlPluginOption.chunks = [getChunk(srcViewPath, matchs),'vendor'];
+        htmlPluginOption.chunks = [getChunk(srcViewPath, matchs), 'vendor'];
         htmlPluginOption.inject = true;
     }
     if (process.env.NODE_ENV === 'production') {
@@ -97,8 +100,12 @@ const generateHtmlWebpackPlugin = (srcViewPath, itemPath) => {
     }
 
     const htmlPlugin = new HtmlWebpackPlugin(htmlPluginOption)
+    const headJavascriptInjectPlugin = new HeadJavascriptInjectPlugin({
+        headJavascript: readHeadScripts()
+    })
 
     arrhtmlPlugins.push(htmlPlugin)
+    arrhtmlPlugins.push(headJavascriptInjectPlugin)
 }
 
 /**
@@ -114,6 +121,19 @@ const removeOldFiles = (callback) => {
         }
     }), callback);
 }
+
+/**
+ * 读取插入头部的脚本
+ */
+const readHeadScripts = () => {
+    const arrHeadJs = [];
+    config.common.headerChunks.forEach((item, index) => {
+        const headJavascript = fs.readFileSync(item, { encoding: 'utf8' });
+        arrHeadJs.push(`<script>${headJavascript}</script>`)
+    })
+    return arrHeadJs.join('\n');
+}
+
 
 
 module.exports.removeOldFiles = removeOldFiles;
