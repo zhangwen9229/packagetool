@@ -1,24 +1,23 @@
 'use strict'
-const utils = require('./utils')
-const webpack = require('webpack')
-const config = require('../config')
-const merge = require('webpack-merge')
-const path = require('path')
-const baseWebpackConfig = require('./webpack.base.conf')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const tools = require('./tools')
-
-// const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-// const portfinder = require('portfinder')
-
-// const HOST = process.env.HOST
-// const PORT = process.env.PORT && Number(process.env.PORT)
+const utils = require('./utils'),
+    webpack = require('webpack'),
+    config = require('../config'),
+    merge = require('webpack-merge'),
+    path = require('path'),
+    baseWebpackConfig = require('./webpack.base.conf'),
+    HtmlWebpackPlugin = require('html-webpack-plugin'),
+    BrowserSyncPlugin = require('browser-sync-webpack-plugin'),
+    ExtractTextPlugin = require('extract-text-webpack-plugin'),
+    tools = require('./tools'),
+    SimpleProgressPlugin = require('webpack-simple-progress-plugin');
 
 const devWebpackConfig = merge(baseWebpackConfig, {
     module: {
-        rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, extract: true, usePostCSS: true })
+        rules: utils.styleLoaders({
+            sourceMap: config.dev.cssSourceMap,
+            extract: true,
+            usePostCSS: true
+        })
     },
     // cheap-module-eval-source-map is faster for development
     devtool: config.dev.devtool,
@@ -41,13 +40,15 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         new BrowserSyncPlugin({
             host: 'localhost',
             port: config.dev.port,
-            server: !!config.dev.proxyUrl ? null : { baseDir: [config.common.assetsRoot] },
+            server: !!config.dev.proxyUrl ? null : {
+                baseDir: [config.common.assetsRoot]
+            },
             proxy: config.dev.proxyUrl || null,
             open: config.dev.autoOpenBrowser
         }, {
             reload: false
         }),
-        ...tools.htmlPlugins
+        new SimpleProgressPlugin()
     ]
 })
 

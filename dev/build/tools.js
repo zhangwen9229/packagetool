@@ -8,31 +8,34 @@ const rm = require('rimraf'),
     HtmlWebpackPlugin = require('html-webpack-plugin'),
     view_path = path.join(config.common.src, config.common.view),
     dist_view_path = path.join(config.common.dist_view, config.common.view),
-    HeadJavascriptInjectPlugin = require('./headJavascriptInjectPlugin');
+    HeadJavascriptInjectPlugin = require('./headJavascriptInjectPlugin'),
+    chokidar = require('chokidar');
 
 let matchs = [],
     files = {},
     arrhtmlPlugins = [];
 
-module.exports.htmlPlugins = arrhtmlPlugins;
-
 const getEntrys = () => {
+    files = {};
+    arrhtmlPlugins = [];
+
     const jsPath = path.resolve(__dirname, view_path);
     const srcViewPath = path.resolve(__dirname, view_path);
     loopReadDir(jsPath, (itemPath) => {
-            matchs = itemPath.match(/(.+)index\.js$/)
-            if (matchs) {
-                files[getChunk(srcViewPath, matchs, true)] = itemPath;
-                return;
-            }
+        matchs = itemPath.match(/(.+)index\.js$/)
+        if (matchs) {
+            files[getChunk(srcViewPath, matchs, true)] = itemPath;
+            return;
+            ``
+        }
 
-            matchs = itemPath.match(/(.+)\.(html|php|jsp|tpl)$/);
-            if (matchs) {
-                generateHtmlWebpackPlugin(srcViewPath, itemPath);
-            }
-        })
+        matchs = itemPath.match(/(.+)\.(html|php|jsp|tpl)$/);
+        if (matchs) {
+            generateHtmlWebpackPlugin(srcViewPath, itemPath);
+        }
+    })
 
-    return files
+    return files;
 }
 
 /**
@@ -83,6 +86,7 @@ const generateHtmlWebpackPlugin = (srcViewPath, itemPath) => {
             inject: false,
             // favicon: 'src/images/favicon.png'
         }
+
     if (itemPath.match(/(.+)index\.html$/)) {
         htmlPluginOption.chunks = [getChunk(srcViewPath, matchs), 'vendor'];
         htmlPluginOption.inject = true;
@@ -114,8 +118,8 @@ const generateHtmlWebpackPlugin = (srcViewPath, itemPath) => {
  */
 const removeOldFiles = (callback) => {
     const arrDir = [path.resolve(__dirname, dist_view_path), config.common.assetsRoot];
-    async.series(arrDir.map(function(dir) {
-        return function(done) {
+    async.series(arrDir.map(function (dir) {
+        return function (done) {
             console.log('cleaning: ', chalk.yellow(dir));
             rm(dir + '/*', done);
         }
@@ -128,13 +132,37 @@ const removeOldFiles = (callback) => {
 const readHeadScripts = () => {
     const arrHeadJs = [];
     config.common.headerChunks.forEach((item, index) => {
-        const headJavascript = fs.readFileSync(item, { encoding: 'utf8' });
+        const headJavascript = fs.readFileSync(item, {
+            encoding: 'utf8'
+        });
         arrHeadJs.push(`<script>${headJavascript}</script>`)
     })
     return arrHeadJs.join('\n');
 }
 
+const watchFile = (filepath, oncreate, ondelete) => {
+    const watcher = chokidar.watch(path.join(filepath, '/**/((*.html)|(*.php)|(index.js))'), {
+        ignored: /[\/\\]\./,
+        persistent: true
+    });
+    var log = console.log.bind(console);
+    watcher.on('ready', () => {
+        watcher
+            .on('add', function (path) {
+                log('File', path, 'has been added');
+                oncreate();
+            }).on('unlink', function (path) {
+                log('File', path, 'has been removed');
+                ondelete();
+            }).on('unlinkDir', function (path) {
+                log('Directory', path, 'has been removed');
+                ondelete();
+            })
+    });
 
+}
 
+module.exports.getHtmlPlugins = () => arrhtmlPlugins;
 module.exports.removeOldFiles = removeOldFiles;
 module.exports.getEntrys = getEntrys;
+module.exports.watchFile = watchFile;

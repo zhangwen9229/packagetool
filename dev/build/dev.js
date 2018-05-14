@@ -8,24 +8,63 @@ const path = require('path'),
     webpackConfig = require('./webpack.dev.conf'),
     tools = require('./tools'),
     bs = require('browser-sync').get('bs-webpack-plugin');
-let lastStatsJson;
+let lastStatsJson,
+    compiler = null,
+    watching = null,
+    compileFlag = "first";
+
+const plugins = webpackConfig.plugins;
 
 tools.removeOldFiles(err => {
     if (err) throw err
-    const compiler = webpack(webpackConfig);
-    let changedFiles = [];
-    //通过watch-run检查修改文件
-    compiler.plugin("watch-run", (watching, done) => {
-        const changedTimes = watching.watchFileSystem.watcher.mtimes;
-        changedFiles = Object.keys(changedTimes)
-            .map(file => `${file}`);
-        done();
-    });
 
-    compiler.watch({
+    createCompiler()
+
+    const src_view_path = path.resolve(__dirname, path.join(config.common.src, config.common.view));
+    tools.watchFile(src_view_path, () => {
+        //create
+        closeWatching()
+    }, () => {
+        //delete
+        closeWatching()
+    });
+})
+
+function createCompiler() {
+    if (compileFlag != "first") {
+        console.log("\n\n")
+        console.log(chalk.red("--------------------------------------------------------"))
+        console.log(chalk.red("rebuild start: \n"))
+
+        compiler = null;
+        tools.htmlPlugins = [];
+        webpackConfig.entry = tools.getEntrys();
+
+        compileFlag = "rebuild";
+    } else {
+        compileFlag = "second";
+    }
+    webpackConfig.plugins = [...plugins, ...tools.getHtmlPlugins()]
+    compiler = webpack(webpackConfig);
+    compilerWatch()
+}
+
+function closeWatching() {
+    watching.invalidate();
+    watching.close(() => {
+        console.log("Watching Ended.");
+        createCompiler();
+    });
+}
+
+let changedFiles = [];
+
+function compilerWatch() {
+    watchRun()
+    watching = compiler.watch({
         aggregateTimeout: 300, // wait so long for more changes
         poll: true // use polling instead of native watchers
-    }, function(err, stats) {
+    }, function (err, stats) {
         if (err) throw err
         const jsonStats = stats.toJson();
         if (stats.hasErrors()) {
@@ -46,6 +85,7 @@ tools.removeOldFiles(err => {
         if (jsonStats.warnings.length > 0) {
             console.log(chalk.red(jsonStats.warnings))
         }
+        console.log(changedFiles)
         if (changedFiles.length) {
             console.log(chalk.green("New build triggered"));
             console.log(chalk.green("  files changed:"), chalk.yellow(changedFiles))
@@ -65,6 +105,7 @@ tools.removeOldFiles(err => {
                 }
             });
 
+            console.log("\n")
             if (isHasJsOrHtmlChanged) {
                 (!JugeChunkChanged(jsonStats, lastStatsJson) || arrMatchs.indexOf('.html') > -1) && bs.reload();
             } else {
@@ -77,8 +118,24 @@ tools.removeOldFiles(err => {
         lastStatsJson = jsonStats;
 
         console.log(chalk.cyan('  Build complete.\n'))
+        console.log(compileFlag)
+        if (compileFlag == "rebuild") {
+            bs.reload();
+            compileFlag = "sencond";
+        }
     });
-})
+}
+
+function watchRun() {
+    //通过watch-run检查修改文件
+    compiler.plugin("watch-run", (watching, done) => {
+        const changedTimes = watching.watchFileSystem.watcher.mtimes;
+        changedFiles = Object.keys(changedTimes)
+            .map(file => `${file}`);
+        done();
+    });
+
+}
 
 /**
  * 判断入口js文件是否有修改，避免js未改动的保存导致浏览器刷新
