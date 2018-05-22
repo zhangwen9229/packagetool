@@ -26,7 +26,6 @@ const getEntrys = () => {
         if (matchs) {
             files[getChunk(srcViewPath, matchs, true)] = itemPath;
             return;
-            ``
         }
 
         matchs = itemPath.match(/(.+)\.(html|php|jsp|tpl)$/);

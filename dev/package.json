@@ -6,7 +6,9 @@
     "scripts": {
         "dev": "node build/dev.js",
         "build": "node build/build.js",
-        "wb": "npx webpack --config build/webpack.dev.conf.js --watch --json > stats.json"
+        "wb": "npx webpack --config build/webpack.dev.conf.js --watch --json > stats.json",
+        "local": "cross-env NODE_ENV=development node build/build.js",
+        "test": "cross-env NODE_ENV=testing node build/build.js"
     },
     "keywords": [
         "gulp",
