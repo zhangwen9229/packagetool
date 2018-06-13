@@ -1,7 +1,7 @@
 const tools = require('./tools')
 
-const entrys = tools.getEntrys();
+// const entrys = tools.getEntrys();
 
-console.log(entrys)
+console.log(process.env.NODE_ENV || "production")
 
-console.log(tools.getHtmlPlugins)
+// console.log(entrys)

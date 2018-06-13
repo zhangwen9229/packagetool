@@ -18,7 +18,6 @@ let matchs = [],
 const getEntrys = () => {
     files = {};
     arrhtmlPlugins = [];
-
     const jsPath = path.resolve(__dirname, view_path);
     const srcViewPath = path.resolve(__dirname, view_path);
     loopReadDir(jsPath, (itemPath) => {
@@ -34,7 +33,7 @@ const getEntrys = () => {
         }
     })
 
-    return files;
+    return files
 }
 
 /**
@@ -85,7 +84,6 @@ const generateHtmlWebpackPlugin = (srcViewPath, itemPath) => {
             inject: false,
             // favicon: 'src/images/favicon.png'
         }
-
     if (itemPath.match(/(.+)index\.html$/)) {
         htmlPluginOption.chunks = [getChunk(srcViewPath, matchs), 'vendor'];
         htmlPluginOption.inject = true;

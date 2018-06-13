@@ -16,7 +16,8 @@ let lastStatsJson,
 const plugins = webpackConfig.plugins;
 
 tools.removeOldFiles(err => {
-    if (err) throw err
+    if (err) 
+        throw err
 
     createCompiler()
 
@@ -44,7 +45,10 @@ function createCompiler() {
     } else {
         compileFlag = "second";
     }
-    webpackConfig.plugins = [...plugins, ...tools.getHtmlPlugins()]
+    webpackConfig.plugins = [
+        ...plugins,
+        ...tools.getHtmlPlugins()
+    ]
     compiler = webpack(webpackConfig);
     compilerWatch()
 }
@@ -65,7 +69,8 @@ function compilerWatch() {
         aggregateTimeout: 300, // wait so long for more changes
         poll: true // use polling instead of native watchers
     }, function (err, stats) {
-        if (err) throw err
+        if (err) 
+            throw err
         const jsonStats = stats.toJson();
         if (stats.hasErrors()) {
             console.log(chalk.red('  Build failed with errors.\n'))
@@ -105,7 +110,6 @@ function compilerWatch() {
                 }
             });
 
-            console.log("\n")
             if (isHasJsOrHtmlChanged) {
                 (!JugeChunkChanged(jsonStats, lastStatsJson) || arrMatchs.indexOf('.html') > -1) && bs.reload();
             } else {
@@ -118,7 +122,6 @@ function compilerWatch() {
         lastStatsJson = jsonStats;
 
         console.log(chalk.cyan('  Build complete.\n'))
-        console.log(compileFlag)
         if (compileFlag == "rebuild") {
             bs.reload();
             compileFlag = "sencond";
@@ -130,7 +133,8 @@ function watchRun() {
     //通过watch-run检查修改文件
     compiler.plugin("watch-run", (watching, done) => {
         const changedTimes = watching.watchFileSystem.watcher.mtimes;
-        changedFiles = Object.keys(changedTimes)
+        changedFiles = Object
+            .keys(changedTimes)
             .map(file => `${file}`);
         done();
     });
@@ -139,8 +143,8 @@ function watchRun() {
 
 /**
  * 判断入口js文件是否有修改，避免js未改动的保存导致浏览器刷新
- * @param {object} jsonStats 
- * @param {object} lastStatsJson 
+ * @param {object} jsonStats
+ * @param {object} lastStatsJson
  */
 const JugeChunkChanged = (jsonStats, lastStatsJson) => {
     if (!lastStatsJson) {

@@ -15,8 +15,8 @@ module.exports = {
     entry: tools.getEntrys(),
     output: {
         path: config.common.assetsRoot,
-        filename: 'assets/js/[name].js',
-        chunkFilename: "assets/js/bundle/[name].js",
+        filename: config.common.assetsSubDirectory + '/js/[name].js',
+        chunkFilename: config.common.assetsSubDirectory + '/bundle/[name].js',
         publicPath: process.env.NODE_ENV === 'production' ? config.build.assetsPublicPath : config.dev.assetsPublicPath
     },
     resolve: {
@@ -24,7 +24,11 @@ module.exports = {
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
             '@': resolve('src'),
-        }
+        },
+        modules: [
+            './src/', 
+            "node_modules"
+        ]
     },
     module: {
         rules: [{
